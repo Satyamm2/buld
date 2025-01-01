@@ -94,9 +94,6 @@ export default function Home() {
             borderRadius: "8px",
           }}
         >
-          {/* <Typography variant="h5" align="center">
-            Login
-          </Typography> */}
           <TextField
             name="email"
             label="Email"

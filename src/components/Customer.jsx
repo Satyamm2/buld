@@ -143,7 +143,6 @@ export default function Customer() {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  required
                   type="email"
                   InputLabelProps={{
                     shrink: true,
@@ -160,7 +159,6 @@ export default function Customer() {
                   name="address"
                   value={formData.address}
                   onChange={handleChange}
-                  required
                   multiline
                   rows={2}
                   InputLabelProps={{

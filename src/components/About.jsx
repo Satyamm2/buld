@@ -4,7 +4,7 @@ export default function About () {
 
     return (
         <>
-        copyright by author satyam
+        A product by Satyam
         </>
     )
 }

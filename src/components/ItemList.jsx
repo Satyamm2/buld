@@ -24,29 +24,30 @@ import axios from "axios";
 import { API_URL } from "../constants";
 import { useNavigate } from "react-router-dom";
 
-export default function CustomerList() {
+export default function ItemList() {
   const session = JSON.parse(sessionStorage.getItem("session"));
+  console.log("session", session);
   const [rows, setRows] = useState([]);
   const [filteredRows, setFilteredRows] = useState(rows);
   const [searchQuery, setSearchQuery] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
   const [dialogData, setDialogData] = useState(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [customerToDelete, setCustomerToDelete] = useState(null);
+  const [optionToDelete, setOptionToDelete] = useState(null);
   const [message, setMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchCustomers();
+    fetchItems();
   }, []);
 
-  const fetchCustomers = async () => {
+  const fetchItems = async () => {
     try {
-      const response = await axios.get(`${API_URL}/api/customer/init`, {
+      const response = await axios.get(`${API_URL}/api/items/init`, {
         params: {
-          service: "GETCUS",
+          service: "GETITEMS",
           company_id: session?.company?.id,
         },
       });
@@ -78,32 +79,20 @@ export default function CustomerList() {
     setIsLoading(true);
     setIsSuccess(false);
     const payload = {
-      customer_id: dialogData?.id,
-      company_id: session?.company?.id,
-      name: dialogData?.name,
-      mobile_number: dialogData?.mobile_number,
-      email: dialogData?.email,
-      address: dialogData?.address,
+      id: dialogData?.id,
+      user_id: session?.user?.id,
+      item_description: dialogData?.item_description,
     };
 
-    if (
-      payload?.mobile_number.length > 10 ||
-      payload?.mobile_number.length < 10
-    ) {
-      setMessage("Mobile number should be of 10 numbers");
-      return;
-    }
-
     try {
-      const response = await axios.put(`${API_URL}/api/customer/init`, {
-        servicePut: "UPDATECUS",
-        payloadPut: payload,
+      const response = await axios.put(`${API_URL}/api/items/init`, {
+        servicename: "UPDATEITEMS",
+        payload,
       });
-      console.log("respnse up", response);
       if (response?.status == 200) {
         setIsSuccess(true);
-        setMessage("User updated successfully");
-        fetchCustomers();
+        setMessage("Updated successfully");
+        fetchItems();
         handleDialogClose();
       }
     } catch (error) {
@@ -116,22 +105,23 @@ export default function CustomerList() {
   };
 
   const handleDelete = (row) => {
-    setCustomerToDelete(row);
+    setOptionToDelete(row);
     setDeleteDialogOpen(true);
   };
 
   const handleDeleteConfirm = async () => {
     try {
-      const response = await axios.delete(`${API_URL}/api/customer/init`, {
+      const response = await axios.delete(`${API_URL}/api/items/init`, {
         params: {
-          servicedel: "DELETECUS",
-          customer_iddel: customerToDelete?.id,
-          company_iddel: session?.company?.id,
+          service: "DELETEITEMS",
+          item_id: optionToDelete?.id,
+          company_id: session?.company?.id,
+          user_id: session?.user?.id,
         },
       });
 
       if (response?.status === 200) {
-        fetchCustomers();
+        fetchItems();
         setDeleteDialogOpen(false);
       }
     } catch (error) {
@@ -146,10 +136,8 @@ export default function CustomerList() {
     if (rows.length != 0) {
       const filtered = rows.filter(
         (row) =>
-          row.name.toLowerCase()?.includes(lowerCaseQuery) ||
-          row.mobile_number.includes(query) ||
-          row.email.toLowerCase()?.includes(lowerCaseQuery) ||
-          row.address.toLowerCase()?.includes(lowerCaseQuery)
+          row.item_name.toLowerCase()?.includes(lowerCaseQuery) ||
+          row.item_description.includes(query)
       );
       setFilteredRows(filtered);
     }
@@ -160,10 +148,8 @@ export default function CustomerList() {
   };
 
   const columns = [
-    { field: "name", headerName: "Name", width: 200 },
-    { field: "mobile_number", headerName: "Mobile Number", width: 200 },
-    { field: "email", headerName: "Email", width: 220 },
-    { field: "address", headerName: "Address", width: 250 },
+    { field: "item_name", headerName: "Item Name", width: 200 },
+    { field: "item_description", headerName: "Item Description", width: 200 },
     {
       field: "actions",
       headerName: "Actions",
@@ -184,23 +170,19 @@ export default function CustomerList() {
   return (
     <>
       <Card>
-        <CardHeader
-          sx={{ pb: 1, pt: 1 }}
-          title={`Customer List`}
-          subheader=""
-        />
+        <CardHeader sx={{ pb: 1, pt: 1 }} title={`Item List`} subheader="" />
         <Divider />
         <CardContent>
           <Toolbar sx={{ m: 0, p: 0 }}>
             <Button
               onClick={() => {
-                navigate("/cust/ad-ed");
+                navigate("/inventory/items-add");
               }}
               variant="contained"
               color="primary"
               startIcon={<Add />}
             >
-              Add Cusomter
+              Add Items
             </Button>
             <TextField
               placeholder="Search customers"
@@ -227,13 +209,13 @@ export default function CustomerList() {
             <Grid container spacing={2}>
               <Grid item xs={6}>
                 <TextField
-                  label="Name"
+                  label="Item Name"
                   size="small"
                   disabled
                   fullWidth
-                  value={dialogData?.name || ""}
+                  value={dialogData?.item_name || ""}
                   onChange={(e) =>
-                    setDialogData({ ...dialogData, name: e.target.value })
+                    setDialogData({ ...dialogData, item_name: e.target.value })
                   }
                   margin="dense"
                   InputLabelProps={{
@@ -243,54 +225,15 @@ export default function CustomerList() {
               </Grid>
               <Grid item xs={6}>
                 <TextField
-                  label="Mobile"
+                  label="Item Description"
                   size="small"
-                  type="number"
                   fullWidth
-                  value={dialogData?.mobile_number || ""}
+                  value={dialogData?.item_description || ""}
                   onChange={(e) =>
                     setDialogData({
                       ...dialogData,
-                      mobile_number: e.target.value,
+                      item_description: e.target.value,
                     })
-                  }
-                  required
-                  margin="dense"
-                  inputProps={{
-                    pattern: "[0-9]{3}[0-9]{3}[0-9]{4}",
-                    title: "Enter a valid mobile number",
-                  }}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  label="Email"
-                  size="small"
-                  fullWidth
-                  type="email"
-                  required
-                  value={dialogData?.email || ""}
-                  onChange={(e) =>
-                    setDialogData({ ...dialogData, email: e.target.value })
-                  }
-                  margin="dense"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  label="Address"
-                  size="small"
-                  fullWidth
-                  required
-                  value={dialogData?.address || ""}
-                  onChange={(e) =>
-                    setDialogData({ ...dialogData, address: e.target.value })
                   }
                   margin="dense"
                   InputLabelProps={{
@@ -335,7 +278,7 @@ export default function CustomerList() {
         open={deleteDialogOpen}
         onClose={() => setDeleteDialogOpen(false)}
         onConfirm={handleDeleteConfirm}
-        label={customerToDelete?.name || ""}
+        label={optionToDelete?.item_name || ""}
       />
     </>
   );

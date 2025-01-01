@@ -11,13 +11,13 @@ const DeleteConfirmationDialog = ({
   open,
   onClose,
   onConfirm,
-  customerName,
+  label,
 }) => {
   return (
     <Dialog open={open} onClose={onClose} autoFocus disableEnforceFocus={false}>
       <DialogTitle>Confirm Deletion</DialogTitle>
       <DialogContent>
-        <p>Are you sure you want to delete customer "{customerName}"?</p>
+        <p>Are you sure you want to delete "{label}"?</p>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="secondary">

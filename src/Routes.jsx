@@ -10,7 +10,9 @@ import { useOutletContext } from "react-router-dom";
 import Customer from "./components/Customer";
 import CustomerList from "./components/CustomerList";
 import Inventory from "./components/Inventory";
-import Bill from "./components/Bill";
+import ItemList from "./components/ItemList";
+import BillCreation from "./components/Bill/BillCreation";
+import BillList from "./components/Bill/BillList";
 
 const HomeOrDashboard = () => {
   const { token } = useOutletContext();
@@ -67,19 +69,46 @@ const AppRouter = createBrowserRouter([
       },
       {
         path: "/inventory",
-        element: (
-          <PrivateRoute>
-            <Inventory />
-          </PrivateRoute>
-        ),
+        children: [
+          {
+            path: "/inventory/items-add",
+            element: (
+              <PrivateRoute>
+                <Inventory />
+              </PrivateRoute>
+            ),
+          },
+          {
+            path: "/inventory/items-list",
+            element: (
+              <PrivateRoute>
+                <ItemList />
+              </PrivateRoute>
+            ),
+          },
+        ],
       },
+
       {
         path: "/bill",
-        element: (
-          <PrivateRoute>
-            <Bill />
-          </PrivateRoute>
-        ),
+        children: [
+          {
+            path: "/bill/create",
+            element: (
+              <PrivateRoute>
+                <BillCreation />
+              </PrivateRoute>
+            ),
+          },
+          {
+            path: "/bill/list",
+            element: (
+              <PrivateRoute>
+                <BillList />
+              </PrivateRoute>
+            ),
+          },
+        ],
       },
     ],
     errorElement: <Error />,

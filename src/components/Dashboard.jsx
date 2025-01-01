@@ -1,13 +1,19 @@
 import React from "react";
 import { Grid } from "@mui/material";
-import CustomCard from "./CustomCard"; // Import the CustomCard component
+import CustomCard from "./CustomCard";
+import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
   const session = JSON.parse(sessionStorage.getItem("session"));
   console.log("session", session);
+  const navigate = useNavigate();
 
   const handleCardClick = (title) => {
-    alert(`You clicked on ${title}`);
+    if (title == "Create Bill") {
+      navigate("/bill/create");
+    } else {
+      navigate("/bill/list");
+    }
   };
 
   return (

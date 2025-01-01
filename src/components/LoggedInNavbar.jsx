@@ -17,6 +17,8 @@ import { logout } from "../redux/slice/authSlice";
 export default function LoggedInNavbar() {
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [inventoryMenuAnchorEl, setInventoryMenuAnchorEl] = useState(null);
+  const [profileMenuAnchorEl, setProfileMenuAnchorEl] = useState(null);
   const session = JSON.parse(sessionStorage.getItem("session"));
 
   const handleLogout = (e) => {
@@ -31,8 +33,18 @@ export default function LoggedInNavbar() {
     setAnchorEl(event.currentTarget);
   };
 
+  const handleInventoryMenuOpen = (event) => {
+    setInventoryMenuAnchorEl(event.currentTarget);
+  };
+
+  const handleprofileMenuOpen = (event) => {
+    setProfileMenuAnchorEl(event.currentTarget);
+  };
+
   const handleMenuClose = () => {
     setAnchorEl(null);
+    setInventoryMenuAnchorEl(null);
+    setProfileMenuAnchorEl(null);
   };
 
   return (
@@ -51,11 +63,33 @@ export default function LoggedInNavbar() {
             </Link>
             <Typography color="text.primary">{`${session?.company?.company_name}`}</Typography>
             <Box>
-              <Button color="inherit">
-                <Link to="/inventory" style={{ textDecoration: "none" }}>
+              <Button color="inherit" onClick={handleInventoryMenuOpen}>
+                <Typography variant="button" color="text.primary">
                   Inventory
-                </Link>
+                </Typography>
               </Button>
+              <Menu
+                anchorEl={inventoryMenuAnchorEl}
+                open={Boolean(inventoryMenuAnchorEl)}
+                onClose={handleMenuClose}
+              >
+                <MenuItem onClick={handleMenuClose}>
+                  <Link
+                    to="/inventory/items-add"
+                    style={{ textDecoration: "none" }}
+                  >
+                    Add Items
+                  </Link>
+                </MenuItem>
+                <MenuItem onClick={handleMenuClose}>
+                  <Link
+                    to="/inventory/items-list"
+                    style={{ textDecoration: "none" }}
+                  >
+                    Item List
+                  </Link>
+                </MenuItem>
+              </Menu>
               <Button color="inherit" onClick={handleMenuOpen}>
                 <Typography variant="button" color="text.primary">
                   Customers
@@ -77,14 +111,25 @@ export default function LoggedInNavbar() {
                   </Link>
                 </MenuItem>
               </Menu>
-              <Button color="inherit">
-                <Link to="/about" style={{ textDecoration: "none" }}>
-                  About
-                </Link>
+              <Button color="inherit" onClick={handleprofileMenuOpen}>
+                <Typography variant="button" color="text.primary">
+                  Profile
+                </Typography>
               </Button>
-              <Button onClick={handleLogout} color="inherit">
-                <Link style={{ textDecoration: "none" }}>Logout</Link>
-              </Button>
+              <Menu
+                anchorEl={profileMenuAnchorEl}
+                open={Boolean(profileMenuAnchorEl)}
+                onClick={handleMenuClose}
+              >
+                <MenuItem onClick={handleLogout}>
+                  <Link style={{ textDecoration: "none" }}>Logout</Link>
+                </MenuItem>
+                <MenuItem onClick={handleMenuClose}>
+                  <Link to="/about" style={{ textDecoration: "none" }}>
+                    About us
+                  </Link>
+                </MenuItem>
+              </Menu>
             </Box>
           </Toolbar>
         </Container>
