@@ -113,7 +113,7 @@ export default function LoggedInNavbar() {
               </Menu>
               <Button color="inherit" onClick={handleprofileMenuOpen}>
                 <Typography variant="button" color="text.primary">
-                  Profile
+                  Settings
                 </Typography>
               </Button>
               <Menu
@@ -121,6 +121,9 @@ export default function LoggedInNavbar() {
                 open={Boolean(profileMenuAnchorEl)}
                 onClick={handleMenuClose}
               >
+                <MenuItem disabled>
+                  <Typography>Hello {session?.user?.first_name}</Typography>
+                </MenuItem>
                 <MenuItem onClick={handleLogout}>
                   <Link style={{ textDecoration: "none" }}>Logout</Link>
                 </MenuItem>
