@@ -66,6 +66,7 @@ export default function Register() {
 
     if (payload?.password?.length < 8) {
       setMessage("Password should contain 8 letters");
+      return;
     }
 
     try {
