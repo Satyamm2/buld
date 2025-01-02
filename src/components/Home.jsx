@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Grid, Typography, TextField, Button, Box, Alert } from "@mui/material";
+import {
+  Grid,
+  Typography,
+  TextField,
+  Button,
+  Box,
+  Alert,
+  CircularProgress,
+} from "@mui/material";
 import { API_URL } from "../constants";
 import axios from "axios";
 import { useDispatch } from "react-redux";
@@ -7,11 +15,12 @@ import { loginSuccess } from "../redux/slice/authSlice";
 
 export default function Home() {
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+    email: "aman@email.com",
+    password: "aman",
   });
   const [message, setMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
 
   const handleInputChange = (e) => {
@@ -24,6 +33,7 @@ export default function Home() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     console.log(formData);
     try {
       const response = await axios.post(`${API_URL}/api/auth/login`, {
@@ -48,6 +58,8 @@ export default function Home() {
     } catch (error) {
       setMessage(error?.response?.data?.message || "Login failed");
       console.error("error", error?.response?.data?.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -114,8 +126,12 @@ export default function Home() {
             onChange={handleInputChange}
             required
           />
-          <Button variant="contained" color="primary" fullWidth type="submit">
-            Login
+          <Button disabled={isLoading} variant="contained" color="primary" fullWidth type="submit">
+            {isLoading ? (
+              <CircularProgress size={24} color="inherit" />
+            ) : (
+              "Login"
+            )}
           </Button>
           {message && (
             <Alert severity={isSuccess ? "success" : "error"}>{message}</Alert>

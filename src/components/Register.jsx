@@ -7,9 +7,12 @@ import {
   Typography,
   Container,
   Alert,
+  CircularProgress,
 } from "@mui/material";
 import axios from "axios";
 import { API_URL } from "../constants";
+import Link from "@mui/material/Link";
+import { useNavigate } from "react-router-dom";
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -25,6 +28,9 @@ export default function Register() {
   });
   const [message, setMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -37,6 +43,7 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSuccess(false);
+    setIsLoading(true);
     console.log("formData", formData);
 
     const payload = {
@@ -93,6 +100,8 @@ export default function Register() {
       setIsSuccess(false);
       setMessage(error?.response?.data?.message || "Resigtration failed");
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -217,9 +226,30 @@ export default function Register() {
             </Grid>
           </Grid>
           <Box sx={{ mt: 2 }}>
-            <Button type="submit" variant="contained" color="primary" fullWidth>
-              Register
+            <Button
+              disabled={isLoading}
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth
+            >
+              {isLoading ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : (
+                "Register"
+              )}
             </Button>
+          </Box>
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+            <Link
+              sx={{ cursor: "pointer" }}
+              underline="hover"
+              onClick={() => {
+                navigate("/");
+              }}
+            >
+              Alredy have an account?
+            </Link>
           </Box>
           {message && (
             <Alert severity={isSuccess ? "success" : "error"}>{message}</Alert>

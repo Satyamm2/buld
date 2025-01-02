@@ -4,7 +4,7 @@ export default function About () {
 
     return (
         <>
-        A product by Satyam
+        A product by Satyam Mishra
         </>
     )
 }

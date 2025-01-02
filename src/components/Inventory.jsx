@@ -39,7 +39,15 @@ export default function Inventory() {
   };
 
   const handleAddRow = () => {
-    setFormData([...formData, { itemname: "", item_description: "" }]);
+    setFormData([
+      ...formData,
+      {
+        itemname: "",
+        item_description: "",
+        company_id: session?.company?.id,
+        user_id: session?.user?.id,
+      },
+    ]);
   };
 
   const handleDeleteRow = (index) => {
@@ -52,10 +60,10 @@ export default function Inventory() {
     setIsLoading(true);
     setIsSuccess(false);
     console.log("formData", formData);
-    if(formData?.length==0) {
-        setMessage("Add items!")
-        setIsLoading(false);
-        return;
+    if (formData?.length == 0) {
+      setMessage("Add items!");
+      setIsLoading(false);
+      return;
     }
 
     try {
@@ -64,12 +72,14 @@ export default function Inventory() {
         payload: formData,
       });
       if (response?.status == 201) {
-        setFormData([{
-          itemname: "",
-          item_description: "",
-          company_id: session?.company?.id,
-          user_id: session?.user?.id,
-        }]);
+        setFormData([
+          {
+            itemname: "",
+            item_description: "",
+            company_id: session?.company?.id,
+            user_id: session?.user?.id,
+          },
+        ]);
         setIsSuccess(true);
         setMessage("Added successfully");
       }
