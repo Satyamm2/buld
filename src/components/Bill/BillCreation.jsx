@@ -20,6 +20,7 @@ import axios from "axios";
 
 export default function BillCreation() {
   const session = JSON.parse(sessionStorage.getItem("session"));
+  console.log("session", session);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [customerList, setCustomerList] = useState([]);
   const [itemList, setItemList] = useState([]);
@@ -27,7 +28,6 @@ export default function BillCreation() {
   const [formData, setFormData] = useState({
     bill_no: "",
     date: "",
-    customer: "",
     total_amt: "",
     delivery_charges: "",
     net_amt: "",
@@ -99,9 +99,9 @@ export default function BillCreation() {
       {
         item_id: "",
         item_name: "",
-        rate: "",
-        quantity: "",
-        total: "",
+        rate: 0,
+        quantity: 0,
+        total: 0,
       },
     ]);
   };
@@ -159,15 +159,36 @@ export default function BillCreation() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const updatedFormData = {
-      ...formData,
-      customer: selectedCustomer?.id,
-    };
+
+    const newCustomer = isNewCustomer
+      ? {
+          name: formData?.name,
+          email: formData?.email,
+          mobile_number: formData?.mobile_number,
+          address: formData?.address,
+        }
+      : null;
+
     const payload = {
-      formData: updatedFormData,
+      bill_no: formData?.bill_no,
+      customer_id: isNewCustomer ? null : selectedCustomer?.id,
+      company_id: session?.company?.id,
+      user_id: session?.user?.id,
+      remarks: formData?.remarks || "",
+      total_amount: formData?.total_amt || 0,
+      delivery_charges: formData?.delivery_charges || 0,
+      net_amount: formData.net_amt || 0,
+      total_discount: 0,
       lineData,
+      payment_amount: formData?.amount_paid || 0,
+      balance: formData?.balance || 0,
+      new_customer: newCustomer,
     };
     console.log("submit", payload);
+
+    try {
+      
+    } catch (error) {}
   };
 
   return (
@@ -231,10 +252,12 @@ export default function BillCreation() {
                         label="Name"
                         variant="outlined"
                         name="name"
+                        value={formData?.name}
                         InputLabelProps={{
                           shrink: true,
                         }}
                         size="small"
+                        onChange={handleChange}
                         required
                       />
                     </Grid>
@@ -244,7 +267,8 @@ export default function BillCreation() {
                         fullWidth
                         label="Mobile Number"
                         variant="outlined"
-                        name="mobile"
+                        name="mobile_number"
+                        value={formData?.value}
                         required
                         type="tel"
                         inputProps={{
@@ -255,6 +279,7 @@ export default function BillCreation() {
                           shrink: true,
                         }}
                         size="small"
+                        onChange={handleChange}
                       />
                     </Grid>
                     <Grid item xs={4}>
@@ -263,11 +288,13 @@ export default function BillCreation() {
                         label="Email"
                         variant="outlined"
                         name="email"
+                        value={formData?.email}
                         type="email"
                         InputLabelProps={{
                           shrink: true,
                         }}
                         size="small"
+                        onChange={handleChange}
                       />
                     </Grid>
 
@@ -277,12 +304,14 @@ export default function BillCreation() {
                         label="Address"
                         variant="outlined"
                         name="address"
+                        value={formData?.address}
                         multiline
                         rows={2}
                         InputLabelProps={{
                           shrink: true,
                         }}
                         size="small"
+                        onChange={handleChange}
                       />
                     </Grid>
                   </>
@@ -488,7 +517,10 @@ export default function BillCreation() {
               </Box>
             </Paper>
             <Divider sx={{ my: 2 }} />
-            <Box sx={{ display: "flex", justifyContent: "flex-start", mt: 2 }}>
+            <Box
+              gap={2}
+              sx={{ display: "flex", justifyContent: "flex-start", mt: 2 }}
+            >
               <Box
                 sx={{
                   display: "flex",
@@ -512,6 +544,7 @@ export default function BillCreation() {
                   <Grid item xs={12}>
                     <TextField
                       fullWidth
+                      name="delivery_charges"
                       type="number"
                       label="Delivery Charges"
                       size="small"
@@ -519,12 +552,7 @@ export default function BillCreation() {
                         shrink: true,
                       }}
                       value={formData.delivery_charges}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          delivery_charges: e.target.value,
-                        })
-                      }
+                      onChange={handleChange}
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -543,6 +571,7 @@ export default function BillCreation() {
                   <Grid item xs={12}>
                     <TextField
                       fullWidth
+                      name="amount_paid"
                       type="number"
                       label="Currently Paying"
                       size="small"
@@ -550,12 +579,7 @@ export default function BillCreation() {
                         shrink: true,
                       }}
                       value={formData.amount_paid}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          amount_paid: e.target.value,
-                        })
-                      }
+                      onChange={handleChange}
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -573,10 +597,27 @@ export default function BillCreation() {
                   </Grid>
                 </Grid>
               </Box>
+              <Grid container spacing={2}>
+                <Grid item xs={4}>
+                  <TextField
+                    fullWidth
+                    label="Remarks"
+                    variant="outlined"
+                    name="remarks"
+                    value={formData?.remarks}
+                    multiline
+                    rows={3.4}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    size="small"
+                    onChange={handleChange}
+                  />
+                </Grid>
+              </Grid>
             </Box>
             <Button
               type="submit"
-              disabled
               variant="contained"
               color="primary"
               sx={{ mt: 2 }}

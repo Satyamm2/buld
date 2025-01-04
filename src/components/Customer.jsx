@@ -50,6 +50,7 @@ export default function Customer() {
       email: formData?.email,
       address: formData?.address,
       company_id: session?.company?.id,
+      user_id: session?.user?.id
     };
 
     try {
