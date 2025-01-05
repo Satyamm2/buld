@@ -22,7 +22,6 @@ import axios from "axios";
 
 export default function BillCreation() {
   const session = JSON.parse(sessionStorage.getItem("session"));
-  console.log("session", session);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [customerList, setCustomerList] = useState([]);
   const [itemList, setItemList] = useState([]);
@@ -122,7 +121,6 @@ export default function BillCreation() {
   const handleInputChange = (index, field, value) => {
     const newLineData = [...lineData];
     if (field == "item_name") {
-      console.log("value", value);
       newLineData[index].item_name = value.item_name;
       newLineData[index].item_id = value.id;
     } else {
@@ -191,7 +189,6 @@ export default function BillCreation() {
       balance: formData?.balance || 0,
       new_customer: newCustomer,
     };
-    console.log("submit", payload);
 
     try {
       const response = await axios.post(`${API_URL}/api/bill/init`, {
@@ -228,7 +225,8 @@ export default function BillCreation() {
         setMessage("bill generated successfuylly");
       }
     } catch (error) {
-      console.log(error);
+      setMessage(error?.response?.data?.message || "Something went wrong!!");
+      console.error(error);
     } finally {
       setIsLoading(false);
     }

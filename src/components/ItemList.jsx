@@ -26,7 +26,6 @@ import { useNavigate } from "react-router-dom";
 
 export default function ItemList() {
   const session = JSON.parse(sessionStorage.getItem("session"));
-  console.log("session", session);
   const [rows, setRows] = useState([]);
   const [filteredRows, setFilteredRows] = useState(rows);
   const [searchQuery, setSearchQuery] = useState("");
@@ -51,7 +50,6 @@ export default function ItemList() {
           company_id: session?.company?.id,
         },
       });
-      console.log("res", response);
 
       if (response?.status == 200) {
         const data = response?.data?.rows || [];

@@ -44,7 +44,6 @@ export default function Register() {
     e.preventDefault();
     setIsSuccess(false);
     setIsLoading(true);
-    console.log("formData", formData);
 
     const payload = {
       firstName: formData?.firstName,
@@ -80,7 +79,7 @@ export default function Register() {
       const response = await axios.post(`${API_URL}/api/auth/register`, {
         payload,
       });
-      console.log("resp", response);
+      
       if (response?.status == 201) {
         setIsSuccess(true);
         setFormData({

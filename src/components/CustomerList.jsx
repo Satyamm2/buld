@@ -50,7 +50,6 @@ export default function CustomerList() {
           company_id: session?.company?.id,
         },
       });
-      console.log("res", response);
 
       if (response?.status == 200) {
         const data = response?.data?.rows || [];
@@ -99,7 +98,6 @@ export default function CustomerList() {
         servicePut: "UPDATECUS",
         payloadPut: payload,
       });
-      console.log("respnse up", response);
       if (response?.status == 200) {
         setIsSuccess(true);
         setMessage("User updated successfully");

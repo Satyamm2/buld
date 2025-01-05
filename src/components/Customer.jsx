@@ -42,8 +42,6 @@ export default function Customer() {
     setIsLoading(true);
     setIsSuccess(false);
 
-    console.log("Form Data Submitted:", formData);
-
     const payload = {
       name: formData?.name,
       mobile_number: formData?.mobile,
@@ -58,7 +56,6 @@ export default function Customer() {
         servicePost: "ADDCUS",
         payload,
       });
-      console.log("response", response);
       if (response?.status == 201) {
         setFormData({
           name: "",

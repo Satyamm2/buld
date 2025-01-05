@@ -10,9 +10,11 @@ import {
   Grid,
   TextField,
   Button,
+  Alert,
+  CircularProgress,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { ArrowBack } from "@mui/icons-material";
+import { ArrowBack, Close as CloseIcon } from "@mui/icons-material";
 import axios from "axios";
 import { API_URL } from "../../constants";
 
@@ -28,7 +30,9 @@ export default function BillListDetail({ bill, onBack }) {
   const [formData, setFormData] = useState({
     currently_paying: "",
     balance_left: "",
+    payment_remarks: "",
   });
+  const [balance, setBalance] = useState(parseFloat(bill.balance));
   const [rows, setRows] = useState([]);
   const [paymentRows, setPaymentRows] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -36,7 +40,6 @@ export default function BillListDetail({ bill, onBack }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
-  console.log("bill", bill);
 
   useEffect(() => {
     if (bill) {
@@ -47,14 +50,23 @@ export default function BillListDetail({ bill, onBack }) {
 
   useEffect(() => {
     if (formData.currently_paying && bill) {
-      const newBalanceLeft =
-        bill.balance - parseFloat(formData.currently_paying);
+      const newBalanceLeft = balance - parseFloat(formData.currently_paying);
       setFormData((prevData) => ({
         ...prevData,
         balance_left: newBalanceLeft >= 0 ? newBalanceLeft : 0,
       }));
     }
   }, [formData.currently_paying, bill]);
+
+  useEffect(() => {
+    if (message) {
+      const timer = setTimeout(() => {
+        handleClose();
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [message]);
 
   const fetchItems = async () => {
     setLoading(true);
@@ -71,7 +83,7 @@ export default function BillListDetail({ bill, onBack }) {
         setRows(data);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -87,13 +99,12 @@ export default function BillListDetail({ bill, onBack }) {
           customer_id: bill?.customer_id,
         },
       });
-      console.log("res", response);
       if (response.status == 200) {
         const data = response?.data?.rows || [];
         setPaymentRows(data);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -101,24 +112,44 @@ export default function BillListDetail({ bill, onBack }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
     setIsSuccess(false);
     setIsSubmitting(true);
 
+    const payload = {
+      bill_id: bill?.id,
+      customer_id: bill?.customer_id,
+      payment_amount: formData?.currently_paying,
+      balance: formData?.balance_left,
+      remarks: formData?.payment_remarks,
+    };
+
     try {
       const response = await axios.post(`${API_URL}/api/bill/init`, {
-        servicename: "",
+        servicename: "SETBILLPAYLINE",
         payload,
       });
       if (response?.status == 201) {
-        setMessage("Sucess");
+        setBalance(parseFloat(formData?.balance_left));
+
+        setFormData({
+          currently_paying: "",
+          balance_left: "",
+          payment_remarks: "",
+        });
         setIsSuccess(true);
+        fetchPayments();
+        setMessage("Success");
       }
     } catch (error) {
+      setMessage(error?.response?.data?.message || "Something went wrong!!");
       console.error(error);
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleClose = () => {
+    setMessage("");
   };
 
   const columns = [
@@ -162,6 +193,19 @@ export default function BillListDetail({ bill, onBack }) {
           </IconButton>
         </Box>
         <CardHeader title="Bill Detail" />
+
+        {message && (
+          <Alert
+            severity={isSuccess ? "success" : "error"}
+            action={
+              <IconButton size="small" color="inherit" onClick={handleClose}>
+                <CloseIcon fontSize="small" />
+              </IconButton>
+            }
+          >
+            {message}
+          </Alert>
+        )}
         <Divider />
         <CardContent>
           <Box display="flex" justifyContent="space-between">
@@ -235,7 +279,7 @@ export default function BillListDetail({ bill, onBack }) {
                       size="small"
                       fullWidth
                       label="Credit Balance"
-                      value={bill.balance}
+                      value={balance || ""}
                       InputLabelProps={{
                         shrink: true,
                       }}
@@ -243,32 +287,6 @@ export default function BillListDetail({ bill, onBack }) {
                         readOnly: true,
                       }}
                     />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    {makeNewPayment ? (
-                      <>
-                        <Box display="flex" gap={2}>
-                          <Button
-                            variant="contained"
-                            onClick={() => setMakeNewPayment(!makeNewPayment)}
-                          >
-                            Cancel
-                          </Button>
-                          <Button disabled type="submit" variant="contained">
-                            Pay
-                          </Button>
-                        </Box>
-                      </>
-                    ) : (
-                      <>
-                        <Button
-                          variant="contained"
-                          onClick={() => setMakeNewPayment(!makeNewPayment)}
-                        >
-                          Make New Payment
-                        </Button>
-                      </>
-                    )}
                   </Grid>
                   {makeNewPayment && (
                     <>
@@ -309,8 +327,64 @@ export default function BillListDetail({ bill, onBack }) {
                           }}
                         />
                       </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          size="small"
+                          fullWidth
+                          label="Remarks"
+                          value={formData?.payment_remarks}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              payment_remarks: e.target.value,
+                            })
+                          }
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                        />
+                      </Grid>
                     </>
                   )}
+                  <Grid item xs={12} sm={6}>
+                    {makeNewPayment ? (
+                      <>
+                        <Box display="flex" gap={2}>
+                          <Button
+                            disabled={isSubmitting}
+                            variant="contained"
+                            onClick={() => setMakeNewPayment(!makeNewPayment)}
+                          >
+                            {isSubmitting ? (
+                              <CircularProgress size={24} color="inherit" />
+                            ) : (
+                              "Cancel"
+                            )}
+                          </Button>
+                          <Button
+                            disabled={isSubmitting}
+                            type="submit"
+                            variant="contained"
+                          >
+                            {isSubmitting ? (
+                              <CircularProgress size={24} color="inherit" />
+                            ) : (
+                              "Pay"
+                            )}
+                          </Button>
+                        </Box>
+                      </>
+                    ) : (
+                      <>
+                        <Button
+                          variant="contained"
+                          onClick={() => setMakeNewPayment(!makeNewPayment)}
+                        >
+                          Make New Payment
+                        </Button>
+                      </>
+                    )}
+                  </Grid>
                 </Grid>
               </form>
             </Box>

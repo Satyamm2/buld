@@ -36,14 +36,13 @@ export default function BillList() {
     to_date: "",
   });
   const [selectedCustomer, setSelectedCustomer] = useState(null);
-  console.log("selectd", selectedCustomer);
   const [rows, setRows] = useState([]);
   const [customerList, setCustomerList] = useState([]);
   const [isCheckedAll, setIsCheckedAll] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingCustomers, setLoadingCustomers] = useState(false);
-  const [selectedBill, setSelectedBill] = useState(null); 
-  const [viewDetail, setViewDetail] = useState(false); 
+  const [selectedBill, setSelectedBill] = useState(null);
+  const [viewDetail, setViewDetail] = useState(false);
 
   useEffect(() => {
     fetchCustomerList();
@@ -83,7 +82,6 @@ export default function BillList() {
               company_id: session?.company?.id,
             },
           });
-      console.log("reposne", response);
       if (response?.status == 200) {
         const data = response?.data?.rows;
         setRows(data);
@@ -134,7 +132,7 @@ export default function BillList() {
       width: 150,
       renderCell: (params) => (
         <>
-          <IconButton onClick={()=> handleViewDetail(params?.row)}>
+          <IconButton onClick={() => handleViewDetail(params?.row)}>
             <Visibility />
           </IconButton>
         </>
@@ -148,7 +146,9 @@ export default function BillList() {
   };
 
   if (viewDetail) {
-    return <BillListDetail bill={selectedBill} onBack={() => setViewDetail(false)} />;
+    return (
+      <BillListDetail bill={selectedBill} onBack={() => setViewDetail(false)} />
+    );
   }
 
   return (

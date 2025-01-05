@@ -143,7 +143,6 @@ const Example = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(inputValue);
   };
 
   return (

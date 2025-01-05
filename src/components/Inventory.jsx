@@ -59,7 +59,7 @@ export default function Inventory() {
     e.preventDefault();
     setIsLoading(true);
     setIsSuccess(false);
-    console.log("formData", formData);
+    
     if (formData?.length == 0) {
       setMessage("Add items!");
       setIsLoading(false);

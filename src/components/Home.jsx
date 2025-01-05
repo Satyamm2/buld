@@ -34,7 +34,7 @@ export default function Home() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    console.log(formData);
+    
     try {
       const response = await axios.post(`${API_URL}/api/auth/login`, {
         email: formData?.email,

@@ -123,7 +123,6 @@ const Home = () => {
   };
 
   const handleSubmit = () => {
-    console.log("submitted");
   };
 
   return (
