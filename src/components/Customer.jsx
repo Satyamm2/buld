@@ -50,7 +50,7 @@ export default function Customer() {
       email: formData?.email,
       address: formData?.address,
       company_id: session?.company?.id,
-      user_id: session?.user?.id
+      user_id: session?.user?.id,
     };
 
     try {
@@ -183,13 +183,13 @@ export default function Customer() {
               <Alert
                 severity={isSuccess ? "success" : "error"}
                 action={
-                    <IconButton
-                      size="small"
-                      color="inherit"
-                      onClick={handleClose}
-                    >
-                      <CloseIcon fontSize="small" />
-                    </IconButton>
+                  <IconButton
+                    size="small"
+                    color="inherit"
+                    onClick={handleClose}
+                  >
+                    <CloseIcon fontSize="small" />
+                  </IconButton>
                 }
               >
                 {message}

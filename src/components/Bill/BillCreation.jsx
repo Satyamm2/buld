@@ -13,8 +13,10 @@ import {
   Typography,
   Paper,
   IconButton,
+  Alert,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { Close as CloseIcon } from "@mui/icons-material";
 import { API_URL } from "../../constants";
 import axios from "axios";
 
@@ -25,6 +27,9 @@ export default function BillCreation() {
   const [customerList, setCustomerList] = useState([]);
   const [itemList, setItemList] = useState([]);
   const [isNewCustomer, setIsNewCustomer] = useState(false);
+  const [message, setMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     bill_no: "",
     date: "",
@@ -157,8 +162,10 @@ export default function BillCreation() {
     return netAmount - amountPaid;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+    setIsSuccess(false);
 
     const newCustomer = isNewCustomer
       ? {
@@ -187,8 +194,48 @@ export default function BillCreation() {
     console.log("submit", payload);
 
     try {
-      
-    } catch (error) {}
+      const response = await axios.post(`${API_URL}/api/bill/init`, {
+        servicename: "SETBILL",
+        payload,
+      });
+      if (response?.status == 201) {
+        setFormData({
+          name: "",
+          email: "",
+          mobile_number: "",
+          address: "",
+          bill_no: "",
+          date: "",
+          total_amt: "",
+          delivery_charges: "",
+          net_amt: "",
+          amount_paid: "",
+          balance: "",
+          remarks: "",
+          total_discount: 0,
+        });
+        setLineData([
+          {
+            item_id: "",
+            item_name: "",
+            rate: "",
+            quantity: "",
+            total: "",
+          },
+        ]);
+        setSelectedCustomer(null);
+        setIsSuccess(true);
+        setMessage("bill generated successfuylly");
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleClose = () => {
+    setMessage("");
   };
 
   return (
@@ -621,9 +668,27 @@ export default function BillCreation() {
               variant="contained"
               color="primary"
               sx={{ mt: 2 }}
+              disabled={isLoading}
             >
               Submit
             </Button>
+
+            {message && (
+              <Alert
+                severity={isSuccess ? "success" : "error"}
+                action={
+                  <IconButton
+                    size="small"
+                    color="inherit"
+                    onClick={handleClose}
+                  >
+                    <CloseIcon fontSize="small" />
+                  </IconButton>
+                }
+              >
+                {message}
+              </Alert>
+            )}
           </CardContent>
         </Card>
       </form>
