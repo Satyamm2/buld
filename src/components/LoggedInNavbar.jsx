@@ -61,7 +61,10 @@ export default function LoggedInNavbar() {
                 {BRAND_NAME}
               </Typography>
             </Link>
-            <Typography color="text.primary">{`${session?.company?.company_name}`}</Typography>
+            <Typography
+              sx={{ ml: 2 }}
+              color="text.primary"
+            >{`${session?.company?.company_name}`}</Typography>
             <Box>
               <Button color="inherit" onClick={handleInventoryMenuOpen}>
                 <Typography variant="button" color="text.primary">

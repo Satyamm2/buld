@@ -12,6 +12,7 @@ import {
   Button,
   Alert,
   CircularProgress,
+  useMediaQuery,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { ArrowBack, Close as CloseIcon } from "@mui/icons-material";
@@ -40,6 +41,7 @@ export default function BillListDetail({ bill, onBack }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
+  const isMobile = useMediaQuery("(max-width:600px)");
 
   useEffect(() => {
     if (bill) {
@@ -170,20 +172,30 @@ export default function BillListDetail({ bill, onBack }) {
     { field: "total", headerName: "Total", width: 200 },
   ];
 
-  const paycolumns = [
-    { field: "id", headerName: "", width: 100 },
-    {
-      field: "created_at",
-      headerName: "Date",
-      width: 200,
-      renderCell: (params) => {
-        return formatDate(params.row.created_at);
-      },
-    },
-    { field: "payment_amount", headerName: "Amount", width: 200 },
-    { field: "remarks", headerName: "Remarks", width: 200 },
-    { field: "balance", headerName: "Credit Balance after pay", width: 200 },
-  ];
+  const paycolumns = isMobile
+    ? [
+        { field: "created_at", headerName: "Date", width: 150 },
+        { field: "payment_amount", headerName: "Amount", width: 150 },
+        { field: "balance", headerName: "Credit Balance", width: 150 },
+      ]
+    : [
+        { field: "id", headerName: "", width: 100 },
+        {
+          field: "created_at",
+          headerName: "Date",
+          width: 200,
+          renderCell: (params) => {
+            return formatDate(params.row.created_at);
+          },
+        },
+        { field: "payment_amount", headerName: "Amount", width: 200 },
+        { field: "remarks", headerName: "Remarks", width: 200 },
+        {
+          field: "balance",
+          headerName: "Credit Balance after pay",
+          width: 200,
+        },
+      ];
 
   return (
     <>
@@ -370,21 +382,21 @@ export default function BillListDetail({ bill, onBack }) {
                     )}
                   </Grid>
                   {message && (
-                    <Grid item xs={12} sm={12} >
-                    <Alert
-                      severity={isSuccess ? "success" : "error"}
-                      action={
-                        <IconButton
-                          size="small"
-                          color="inherit"
-                          onClick={handleClose}
-                        >
-                          <CloseIcon fontSize="small" />
-                        </IconButton>
-                      }
-                    >
-                      {message}
-                    </Alert>
+                    <Grid item xs={12} sm={12}>
+                      <Alert
+                        severity={isSuccess ? "success" : "error"}
+                        action={
+                          <IconButton
+                            size="small"
+                            color="inherit"
+                            onClick={handleClose}
+                          >
+                            <CloseIcon fontSize="small" />
+                          </IconButton>
+                        }
+                      >
+                        {message}
+                      </Alert>
                     </Grid>
                   )}
                 </Grid>
@@ -416,7 +428,7 @@ export default function BillListDetail({ bill, onBack }) {
               sx={{
                 display: "flex",
                 flexDirection: "column",
-                width: "30%",
+                width: { xs: "100%", md: "30%" },
               }}
             >
               <Grid container spacing={2}>

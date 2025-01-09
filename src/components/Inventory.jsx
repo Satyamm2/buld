@@ -133,7 +133,7 @@ export default function Inventory() {
                   spacing={2}
                   alignItems="center"
                 >
-                  <Grid item xs={5}>
+                  <Grid item xs={12} md={5}>
                     <TextField
                       fullWidth
                       label="Item Name"
@@ -150,7 +150,7 @@ export default function Inventory() {
                     />
                   </Grid>
 
-                  <Grid item xs={5}>
+                  <Grid item xs={10} md={5}>
                     <TextField
                       fullWidth
                       label="Item Description"

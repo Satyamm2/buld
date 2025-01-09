@@ -97,7 +97,7 @@ export default function Customer() {
         <form onSubmit={handleSubmit}>
           <CardContent>
             <Grid container spacing={2}>
-              <Grid item xs={6}>
+              <Grid item xs={12} md={6}>
                 <TextField
                   fullWidth
                   label="Name"
@@ -113,7 +113,7 @@ export default function Customer() {
                 />
               </Grid>
 
-              <Grid item xs={6}>
+              <Grid item xs={12} md={6}>
                 <TextField
                   fullWidth
                   label="Mobile Number"

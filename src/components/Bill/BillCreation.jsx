@@ -244,7 +244,7 @@ export default function BillCreation() {
           <Divider />
           <CardContent>
             <Grid container spacing={2}>
-              <Grid item xs={4}>
+              <Grid item xs={6} md={4}>
                 <TextField
                   fullWidth
                   label="Bill No"
@@ -257,7 +257,7 @@ export default function BillCreation() {
                   }}
                 />
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={6} md={4}>
                 <TextField
                   fullWidth
                   size="small"
@@ -291,7 +291,7 @@ export default function BillCreation() {
               <Grid container spacing={2} sx={{ my: 1 }}>
                 {isNewCustomer ? (
                   <>
-                    <Grid item xs={4}>
+                    <Grid item xs={12} md={4}>
                       <TextField
                         fullWidth
                         label="Name"
@@ -307,7 +307,7 @@ export default function BillCreation() {
                       />
                     </Grid>
 
-                    <Grid item xs={4}>
+                    <Grid item xs={12} md={4}>
                       <TextField
                         fullWidth
                         label="Mobile Number"
@@ -327,7 +327,7 @@ export default function BillCreation() {
                         onChange={handleChange}
                       />
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item xs={12} md={4}>
                       <TextField
                         fullWidth
                         label="Email"
@@ -343,7 +343,7 @@ export default function BillCreation() {
                       />
                     </Grid>
 
-                    <Grid item xs={4}>
+                    <Grid item xs={12} md={4}>
                       <TextField
                         fullWidth
                         label="Address"
@@ -361,7 +361,7 @@ export default function BillCreation() {
                     </Grid>
                   </>
                 ) : (
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={4}>
                     <Autocomplete
                       fullWidth
                       size="small"
@@ -431,7 +431,7 @@ export default function BillCreation() {
               </Box>
               {lineData?.map((line, index) => (
                 <Grid container spacing={2} sx={{ my: 1 }} key={index}>
-                  <Grid item xs={3}>
+                  <Grid item xs={12} md={3}>
                     <Autocomplete
                       fullWidth
                       size="small"
@@ -493,7 +493,7 @@ export default function BillCreation() {
                     />
                   </Grid>
 
-                  <Grid item xs={3}>
+                  <Grid item xs={6} md={3}>
                     <TextField
                       fullWidth
                       label="Rate"
@@ -509,7 +509,7 @@ export default function BillCreation() {
                       required
                     />
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={6} md={3}>
                     <TextField
                       fullWidth
                       label="Quantity"
@@ -525,7 +525,7 @@ export default function BillCreation() {
                       required
                     />
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={6} md={2}>
                     <TextField
                       fullWidth
                       disabled
@@ -570,11 +570,11 @@ export default function BillCreation() {
                 sx={{
                   display: "flex",
                   flexDirection: "column",
-                  width: "30%",
+                  width: "100%",
                 }}
               >
                 <Grid container spacing={2}>
-                  <Grid item xs={12}>
+                  <Grid item xs={12} md={6}>
                     <TextField
                       fullWidth
                       disabled
@@ -586,7 +586,7 @@ export default function BillCreation() {
                       value={formData.total_amt}
                     />
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid item xs={12} md={6}>
                     <TextField
                       fullWidth
                       name="delivery_charges"
@@ -600,7 +600,7 @@ export default function BillCreation() {
                       onChange={handleChange}
                     />
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid item xs={12} md={6}>
                     <TextField
                       fullWidth
                       disabled
@@ -613,7 +613,7 @@ export default function BillCreation() {
                       value={formData.net_amt}
                     />
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid item xs={12} md={6}>
                     <TextField
                       fullWidth
                       name="amount_paid"
@@ -627,7 +627,7 @@ export default function BillCreation() {
                       onChange={handleChange}
                     />
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid item xs={12} md={6}>
                     <TextField
                       fullWidth
                       type="number"
@@ -643,7 +643,7 @@ export default function BillCreation() {
                 </Grid>
               </Box>
               <Grid container spacing={2}>
-                <Grid item xs={4}>
+                <Grid item xs={12} md={4}>
                   <TextField
                     fullWidth
                     label="Remarks"
