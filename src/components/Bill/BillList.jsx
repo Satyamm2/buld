@@ -43,10 +43,17 @@ export default function BillList() {
   const [loadingCustomers, setLoadingCustomers] = useState(false);
   const [selectedBill, setSelectedBill] = useState(null);
   const [viewDetail, setViewDetail] = useState(false);
+  const [selectedBillBack, setSelectedBillBack] = useState(null);
 
   useEffect(() => {
     fetchCustomerList();
   }, []);
+
+  useEffect(() => {
+    if (selectedBillBack) {
+      updateBalance();
+    }
+  }, [selectedBillBack]);
 
   const handleCheckboxChange = (event) => {
     setIsCheckedAll(event.target.checked);
@@ -145,9 +152,25 @@ export default function BillList() {
     setViewDetail(true);
   };
 
+  const updateBalance = () => {
+    const updatedRows = rows.map((row) =>
+      row.id === selectedBillBack?.id
+        ? { ...row, balance: selectedBillBack?.balance }
+        : row
+    );
+    setRows(updatedRows);
+  };
+
   if (viewDetail) {
     return (
-      <BillListDetail bill={selectedBill} onBack={() => setViewDetail(false)} />
+      <BillListDetail
+        bill={selectedBill}
+        setSelectedBillBack={setSelectedBillBack}
+        onBack={() => {
+          setViewDetail(false);
+          setSelectedBillBack(null);
+        }}
+      />
     );
   }
 

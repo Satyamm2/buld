@@ -1,15 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    billBalance: null,
+  billBalance: null,
 };
 
 const billSlice = createSlice({
   name: "bill",
   initialState,
   reducers: {
-    refreshBill: (state) => {
-      state.fetchBillRefresh = !state.fetchBillRefresh;
+    refreshBill: (state, action) => {
+      state.fetchBillRefresh = action.payload.balanceLeft;
     },
   },
 });

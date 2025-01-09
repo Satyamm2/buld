@@ -27,7 +27,7 @@ const formatDate = (dateString) => {
   return `${day}/${month}/${year}`;
 };
 
-export default function BillListDetail({ bill, onBack }) {
+export default function BillListDetail({ bill, setSelectedBillBack, onBack }) {
   const [formData, setFormData] = useState({
     currently_paying: "",
     balance_left: "",
@@ -133,11 +133,17 @@ export default function BillListDetail({ bill, onBack }) {
       if (response?.status == 201) {
         setBalance(parseFloat(formData?.balance_left));
 
+        setSelectedBillBack({
+          id: bill?.id,
+          balance: formData?.balance_left,
+        });
+
         setFormData({
           currently_paying: "",
           balance_left: "",
           payment_remarks: "",
         });
+
         setIsSuccess(true);
         fetchPayments();
         setMakeNewPayment(false);
@@ -174,7 +180,14 @@ export default function BillListDetail({ bill, onBack }) {
 
   const paycolumns = isMobile
     ? [
-        { field: "created_at", headerName: "Date", width: 150 },
+        {
+          field: "created_at",
+          headerName: "Date",
+          width: 150,
+          renderCell: (params) => {
+            return formatDate(params.row.created_at);
+          },
+        },
         { field: "payment_amount", headerName: "Amount", width: 150 },
         { field: "balance", headerName: "Credit Balance", width: 150 },
       ]
@@ -201,7 +214,7 @@ export default function BillListDetail({ bill, onBack }) {
     <>
       <Card sx={{ mt: 2 }}>
         <Box sx={{ display: "flex", justifyContent: "flex-start" }}>
-          <IconButton onClick={onBack}>
+          <IconButton disabled={isSubmitting} onClick={onBack}>
             <ArrowBack />
           </IconButton>
         </Box>

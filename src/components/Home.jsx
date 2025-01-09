@@ -34,7 +34,7 @@ export default function Home() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    
+
     try {
       const response = await axios.post(`${API_URL}/api/auth/login`, {
         email: formData?.email,
@@ -126,7 +126,13 @@ export default function Home() {
             onChange={handleInputChange}
             required
           />
-          <Button disabled={isLoading} variant="contained" color="primary" fullWidth type="submit">
+          <Button
+            disabled={isLoading}
+            variant="contained"
+            color="primary"
+            fullWidth
+            type="submit"
+          >
             {isLoading ? (
               <CircularProgress size={24} color="inherit" />
             ) : (

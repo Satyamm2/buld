@@ -101,7 +101,6 @@ export default function Register() {
       setMessage(error?.response?.data?.message || "Resigtration failed");
       console.error(error);
     } finally {
-      console.log("insde");
       setIsLoading(false);
     }
   };
