@@ -43,6 +43,7 @@ export default function ItemList() {
   }, []);
 
   const fetchItems = async () => {
+    setIsLoading(false);
     try {
       const response = await axios.get(`${API_URL}/api/items/init`, {
         params: {
@@ -58,6 +59,8 @@ export default function ItemList() {
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(true);
     }
   };
 
@@ -191,7 +194,12 @@ export default function ItemList() {
               sx={{ ml: 2, width: 300 }}
             />
           </Toolbar>
-          <DataGrid rows={filteredRows} columns={columns} pageSize={5} />
+          <DataGrid
+            loading={isLoading}
+            rows={filteredRows}
+            columns={columns}
+            pageSize={5}
+          />
         </CardContent>
       </Card>
 

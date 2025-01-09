@@ -40,8 +40,6 @@ export default function Dashboard() {
         },
       });
 
-      console.log("repsoes", response)
-
       if(response?.status==200) {
         const data = response?.data?.rows[0]?.total_balance || ''
         setTotalBal(data)

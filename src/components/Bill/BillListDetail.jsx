@@ -138,6 +138,7 @@ export default function BillListDetail({ bill, onBack }) {
         });
         setIsSuccess(true);
         fetchPayments();
+        setMakeNewPayment(false);
         setMessage("Success");
       }
     } catch (error) {
@@ -193,19 +194,6 @@ export default function BillListDetail({ bill, onBack }) {
           </IconButton>
         </Box>
         <CardHeader title="Bill Detail" />
-
-        {message && (
-          <Alert
-            severity={isSuccess ? "success" : "error"}
-            action={
-              <IconButton size="small" color="inherit" onClick={handleClose}>
-                <CloseIcon fontSize="small" />
-              </IconButton>
-            }
-          >
-            {message}
-          </Alert>
-        )}
         <Divider />
         <CardContent>
           <Box display="flex" justifyContent="space-between">
@@ -366,11 +354,7 @@ export default function BillListDetail({ bill, onBack }) {
                             type="submit"
                             variant="contained"
                           >
-                            {isSubmitting ? (
-                              <CircularProgress size={24} color="inherit" />
-                            ) : (
-                              "Pay"
-                            )}
+                            {isSubmitting ? "Adding.." : "Add Payment"}
                           </Button>
                         </Box>
                       </>
@@ -380,11 +364,29 @@ export default function BillListDetail({ bill, onBack }) {
                           variant="contained"
                           onClick={() => setMakeNewPayment(!makeNewPayment)}
                         >
-                          Make New Payment
+                          Add New Payment
                         </Button>
                       </>
                     )}
                   </Grid>
+                  {message && (
+                    <Grid item xs={12} sm={12} >
+                    <Alert
+                      severity={isSuccess ? "success" : "error"}
+                      action={
+                        <IconButton
+                          size="small"
+                          color="inherit"
+                          onClick={handleClose}
+                        >
+                          <CloseIcon fontSize="small" />
+                        </IconButton>
+                      }
+                    >
+                      {message}
+                    </Alert>
+                    </Grid>
+                  )}
                 </Grid>
               </form>
             </Box>

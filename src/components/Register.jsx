@@ -42,8 +42,6 @@ export default function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSuccess(false);
-    setIsLoading(true);
 
     const payload = {
       firstName: formData?.firstName,
@@ -75,11 +73,14 @@ export default function Register() {
       return;
     }
 
+    setIsSuccess(false);
+    setIsLoading(true);
+
     try {
       const response = await axios.post(`${API_URL}/api/auth/register`, {
         payload,
       });
-      
+
       if (response?.status == 201) {
         setIsSuccess(true);
         setFormData({
@@ -100,6 +101,7 @@ export default function Register() {
       setMessage(error?.response?.data?.message || "Resigtration failed");
       console.error(error);
     } finally {
+      console.log("insde");
       setIsLoading(false);
     }
   };

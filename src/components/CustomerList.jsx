@@ -43,6 +43,7 @@ export default function CustomerList() {
   }, []);
 
   const fetchCustomers = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.get(`${API_URL}/api/customer/init`, {
         params: {
@@ -58,6 +59,8 @@ export default function CustomerList() {
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false)
     }
   };
 
@@ -209,7 +212,7 @@ export default function CustomerList() {
               sx={{ ml: 2, width: 300 }}
             />
           </Toolbar>
-          <DataGrid rows={filteredRows} columns={columns} pageSize={5} />
+          <DataGrid loading={isLoading} rows={filteredRows} columns={columns} pageSize={5} />
         </CardContent>
       </Card>
 

@@ -59,7 +59,7 @@ export default function Inventory() {
     e.preventDefault();
     setIsLoading(true);
     setIsSuccess(false);
-    
+
     if (formData?.length == 0) {
       setMessage("Add items!");
       setIsLoading(false);
@@ -67,10 +67,19 @@ export default function Inventory() {
     }
 
     try {
-      const response = await axios.post(`${API_URL}/api/items/init`, {
-        servicename: "ADDITEMS",
-        payload: formData,
-      });
+      const response = await axios.post(
+        `${API_URL}/api/items/init`,
+        {
+          servicename: "ADDITEMS",
+          payload: formData,
+        }
+
+        // {
+        //   headers: {
+        //     Authorization: `Bearer ${token}`,
+        //   },
+        // }
+      );
       if (response?.status == 201) {
         setFormData([
           {
