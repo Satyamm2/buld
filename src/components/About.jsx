@@ -37,9 +37,7 @@ export default function About() {
             marginBottom: 3,
           }}
         >
-          Our goal is to provide users with high-quality, user-friendly products
-          that improve their daily lives. We believe in innovation, simplicity,
-          and delivering the best user experience possible.
+          Innovating the future
         </Typography>
         <Typography
           variant="body2"
