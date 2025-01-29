@@ -186,7 +186,7 @@ export default function ItemList() {
               Add Items
             </Button>
             <TextField
-              placeholder="Search customers"
+              placeholder="Search items"
               variant="outlined"
               size="small"
               value={searchQuery}
