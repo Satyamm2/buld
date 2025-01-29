@@ -570,11 +570,11 @@ export default function BillCreation() {
                 sx={{
                   display: "flex",
                   flexDirection: "column",
-                  width: "100%",
+                  width: {xs:"100%", sm: '50%'},
                 }}
               >
                 <Grid container spacing={2}>
-                  <Grid item xs={12} md={6}>
+                  <Grid item xs={12}>
                     <TextField
                       fullWidth
                       disabled
@@ -586,7 +586,7 @@ export default function BillCreation() {
                       value={formData.total_amt}
                     />
                   </Grid>
-                  <Grid item xs={12} md={6}>
+                  <Grid item xs={12}>
                     <TextField
                       fullWidth
                       name="delivery_charges"
@@ -600,7 +600,7 @@ export default function BillCreation() {
                       onChange={handleChange}
                     />
                   </Grid>
-                  <Grid item xs={12} md={6}>
+                  <Grid item xs={12}>
                     <TextField
                       fullWidth
                       disabled
@@ -613,7 +613,7 @@ export default function BillCreation() {
                       value={formData.net_amt}
                     />
                   </Grid>
-                  <Grid item xs={12} md={6}>
+                  <Grid item xs={12}>
                     <TextField
                       fullWidth
                       name="amount_paid"
@@ -627,7 +627,7 @@ export default function BillCreation() {
                       onChange={handleChange}
                     />
                   </Grid>
-                  <Grid item xs={12} md={6}>
+                  <Grid item xs={12}>
                     <TextField
                       fullWidth
                       type="number"
