@@ -43,7 +43,7 @@ export default function ItemList() {
   }, []);
 
   const fetchItems = async () => {
-    setIsLoading(false);
+    setIsLoading(true);
     try {
       const response = await axios.get(`${API_URL}/api/items/init`, {
         params: {
@@ -60,7 +60,7 @@ export default function ItemList() {
     } catch (error) {
       console.error(error);
     } finally {
-      setIsLoading(true);
+      setIsLoading(false);
     }
   };
 
