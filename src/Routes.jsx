@@ -1,10 +1,8 @@
-import React from "react";
+import React, { lazy } from "react";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { Applayout } from "./App";
 import Home from "./components/Home";
 import Error from "./components/Error";
-import About from "./components/About";
-import Register from "./components/Register";
 import Dashboard from "./components/Dashboard";
 import { useOutletContext } from "react-router-dom";
 import Customer from "./components/Customer";
@@ -13,6 +11,9 @@ import Inventory from "./components/Inventory";
 import ItemList from "./components/ItemList";
 import BillCreation from "./components/Bill/BillCreation";
 import BillList from "./components/Bill/BillList";
+
+const About = lazy(() => import("./components/About"));
+const Register = lazy(() => import("./components/Register"));
 
 const HomeOrDashboard = () => {
   const { token } = useOutletContext();

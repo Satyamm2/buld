@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import "./App.css";
 import LoggedInNavbar from "./components/LoggedInNavbar";
 import Navbar from "./components/Navbar";
@@ -24,7 +24,9 @@ export function Applayout() {
   return (
     <>
       {token ? <LoggedInNavbar /> : <Navbar />}
-      <Outlet context={{ token }} />
+      <Suspense fallback={<h1>Loading...</h1>}>
+        <Outlet context={{ token }} />
+      </Suspense>
     </>
   );
 }
